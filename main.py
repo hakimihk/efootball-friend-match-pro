@@ -1,39 +1,78 @@
 import telebot
-from flask import Flask, request
-from config import TOKEN, WEBHOOK_URL, PORT
+import json
+import os
+from telebot import types
 import database as db
-from utils.helpers import get_main_keyboard, get_text
-from modules import admin, challenge, settings
-from utils import security
+from config import TOKEN
 
-bot = telebot.TeleBot(TOKEN, parse_mode="HTML")
-app = Flask(__name__)
+bot = telebot.TeleBot(TOKEN)
 
-# --- WEBHOOK SETUP ---
-@app.route('/' + TOKEN, methods=['POST'])
-def getMessage():
-    json_string = request.get_data().decode('utf-8')
-    update = telebot.types.Update.de_json(json_string)
-    bot.process_new_updates([update])
-    return "!", 200
+def get_text(key, user_id):
+    lang = db.get_user_lang(user_id) or 'so'
+    try:
+        with open(f'locales/{lang}.json', 'r', encoding='utf-8') as f:
+            data = json.load(f)
+            return data.get(key, f"Missing key: {key}")
+    except:
+        return f"Error: {key}"
 
-@app.route("/")
-def webhook():
-    bot.remove_webhook()
-    bot.set_webhook(url=WEBHOOK_URL + TOKEN)
-    return "Bot is Running!", 200
-
-# --- HANDLERS ---
 @bot.message_handler(commands=['start'])
 def send_welcome(message):
     user_id = message.from_user.id
-    # Register user in DB if not exists
-    db.add_user(user_id, message.from_user.username)
-    lang = db.get_user_lang(user_id)
+    db.register_user(user_id, message.from_user.username)
     
-    welcome_msg = f"⚽ <b>{get_text('welcome_title', lang)}</b>\n\n{get_text('welcome_desc', lang)}"
-    bot.send_message(message.chat.id, welcome_msg, reply_markup=get_main_keyboard(lang))
+    markup = types.InlineKeyboardMarkup(row_width=2)
+    markup.add(
+        types.InlineKeyboardButton(get_text('challenge', user_id), callback_data="challenge"),
+        types.InlineKeyboardButton(get_text('league', user_id), callback_data="league"),
+        types.InlineKeyboardButton(get_text('help', user_id), callback_data="help"),
+        types.InlineKeyboardButton(get_text('settings', user_id), callback_data="settings")
+    )
+    
+    bot.send_message(message.chat.id, f"⚽ {get_text('welcome_title', user_id)}\n\n{get_text('welcome_desc', user_id)}", reply_markup=markup)
 
+@bot.message_handler(func=lambda m: len(m.text) == 8 and m.text.isdigit())
+def handle_code(message):
+    user_id = message.from_user.id
+    code = message.text
+    
+    if db.is_duplicate_code(code):
+        bot.reply_to(message, "⚠️ Sxb code-kan mar hore ayaa la soo geliyay!")
+        return
+
+    db.register_code(code, user_id)
+    markup = types.InlineKeyboardMarkup()
+    markup.add(types.InlineKeyboardButton(get_text('claim', user_id), callback_data=f"claim_{code}"))
+    
+    user_name = message.from_user.username if message.from_user.username else message.from_user.first_name
+    msg = f"🎮 **NEW CHALLENGE!**\n\nCode: `{code}`\nUser: @{user_name}\n\n{get_text('room_instruction', user_id)}"
+    bot.send_message(message.chat.id, msg, reply_markup=markup, parse_mode="Markdown")
+
+@bot.callback_query_handler(func=lambda call: True)
+def callback_listener(call):
+    user_id = call.from_user.id
+    try:
+        if call.data == "challenge":
+            bot.answer_callback_query(call.id)
+            bot.send_message(call.message.chat.id, "Soo dir 8-da lambar ee Room Code-ka ah 🎮")
+
+        elif call.data.startswith("claim_"):
+            code = call.data.split("_")[1]
+            db.claim_code(code, user_id)
+            bot.answer_callback_query(call.id, text=get_text('code_claimed', user_id))
+            bot.send_message(call.message.chat.id, f"✅ {get_text('start_match', user_id)}")
+            
+        elif call.data == "settings":
+            bot.answer_callback_query(call.id)
+            bot.send_message(call.message.chat.id, get_text('select_lang', user_id))
+    except Exception as e:
+        bot.answer_callback_query(call.id, text="Cillad baa dhacday!")
+
+if __name__ == "__main__":
+    db.init_db()
+    print("Bot-ka waa la kiciyay (Polling)...")
+    bot.remove_webhook()
+    bot.infinity_polling()
 # --- ROOM CODE DETECTION (CHALLENGE SYSTEM) ---
 @bot.message_handler(func=lambda m: len(m.text) == 8 and m.text.isdigit())
 def handle_room_code(message):
