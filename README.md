@@ -16,7 +16,7 @@ A high-performance Telegram bot designed for eFootball communities to manage Fri
 - **Web Framework:** Flask (for Webhooks)
 
 ## 📦 Setup & Installation
-1. Clone the repo: `git clone https://github.com/USERNAME/REPO-NAME.git`
+1. Clone the repo: `git clone https://github.com/hakimihk/efootball-friend-match-pro.git`
 2. Install requirements: `pip install -r requirements.txt`
 3. Configure `.env` with your `BOT_TOKEN` and `ADMIN_IDS`.
 4. Run `python main.py`.
