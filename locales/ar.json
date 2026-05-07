@@ -1,0 +1,10 @@
+{
+  "welcome_msg": "مرحباً بك في بوت eFootball!",
+  "btn_challenge": "مباراة ودية",
+  "btn_league": "الدوري",
+  "btn_settings": "الإعدادات",
+  "btn_help": "مساعدة",
+  "claim_btn": "أخذ الكود",
+  "err_own_code": "عذراً، لا يمكنك أخذ الكود الخاص بك!",
+  "select_lang": "الرجاء اختيار اللغة:"
+}
