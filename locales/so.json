@@ -1,10 +1,14 @@
 {
-  "welcome_msg": "Ku soo dhawaaw eFootball Bot!",
-  "btn_challenge": "Friend Match",
-  "btn_league": "League",
-  "btn_settings": "Settings",
-  "btn_help": "Caawinaad",
-  "claim_btn": "Qaado Code-ka",
-  "err_own_code": "Sxb, ma qaadan kartid code aad adigu soo dirtay!",
-  "select_lang": "Fadlan dooro luqadda aad rabto:"
+  "welcome_title": "Ku soo dhawaaw eFootball Bot!",
+  "welcome_desc": "Dooro mid ka mid ah adeegyada hoos ku qoran si aad u bilowdo ciyaar xiiso leh.",
+  "challenge": "🎮 Friend Match",
+  "league": "🎲 League",
+  "help": "📖 Caawinaad",
+  "settings": "⚙️ Settings",
+  "room_instruction": "Fadlan qofka raba inuu kula ciyaaro ha riixo batoonka hoose.",
+  "claim": "📩 Qaado Code-ka",
+  "err_own_code": "Sxb, ma qaadan kartid code-kaaga!",
+  "select_lang": "Fadlan dooro luqadda aad rabto:",
+  "code_claimed": "✅ Code-ka waa la qaatay!",
+  "start_match": "🔥 Ciyaartu waa bilaabatay! Iska dhiciya sxb."
 }
