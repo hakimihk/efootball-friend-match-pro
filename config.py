@@ -3,7 +3,7 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-TOKEN = os.getenv("8721581472:AAEL4QKl_AoJ2caDhp9nBJxJODa-iAhBP-o", "YOUR_TOKEN_HERE")
+TOKEN = os.getenv("8721581472:AAEL4QKl_AoJ2caDhp9nBJxJODa-iAhBP-o", #"YOUR_TOKEN_HERE")
 ADMIN_IDS = [8551276141]  # Replace with actual IDs
 DATABASE_PATH = "efootball.db"
 WEBHOOK_URL = os.getenv("WEBHOOK_URL") # For Katabump/VPS
