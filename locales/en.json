@@ -1,0 +1,10 @@
+{
+  "welcome_msg": "Welcome to eFootball Bot!",
+  "btn_challenge": "Friend Match",
+  "btn_league": "League",
+  "btn_settings": "Settings",
+  "btn_help": "Help",
+  "claim_btn": "Claim Code",
+  "err_own_code": "Sxb, you can't claim your own code!",
+  "select_lang": "Please select your language:"
+}
