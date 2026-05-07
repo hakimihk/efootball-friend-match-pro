@@ -3,6 +3,8 @@ from flask import Flask, request
 from config import TOKEN, WEBHOOK_URL, PORT
 import database as db
 from utils.helpers import get_main_keyboard, get_text
+from modules import admin, challenge, settings
+from utils import security
 
 bot = telebot.TeleBot(TOKEN, parse_mode="HTML")
 app = Flask(__name__)
