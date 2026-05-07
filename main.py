@@ -70,8 +70,7 @@ def claim_code(call):
     )
 
 if __name__ == "__main__":
-    # Start database
     db.init_db()
-    # For local testing, use bot.infinity_polling()
-    # For production, use app.run
-    app.run(host="0.0.0.0", port=PORT)
+    print("Bot-ka waa la kiciyay (Polling Mode)...")
+    bot.remove_webhook()
+    bot.infinity_polling()
